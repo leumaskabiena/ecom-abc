@@ -56,7 +56,15 @@
 
 						
                         <% if (user && user.isAuthenticated) { %>
-                            <li><a href="/logout" class="flex-c-m trans-04 p-lr-25">Logout</a></li>
+							<li class="dropdown">
+								<a href="#" class="flex-c-m trans-04 p-lr-25 dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									Account
+								</a>
+								<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+									<a class="dropdown-item" href="/logout">Logout</a>
+									<a class="dropdown-item" href="/register">Register</a>
+								</div>
+							</li>
                         <% } else { %>
                             <a href="/login" class="flex-c-m trans-04 p-lr-25">
                                 My Account

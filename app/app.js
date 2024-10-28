@@ -8,7 +8,7 @@ import bodyParser from 'body-parser';
 import config from '../config/config.js'; // Ensure this is the correct path and name
 import productRoutes from '../routes/product-routes.js';
 import authRoutes from '../routes/auth-routes.js';
-///import cartItemsRoutes from '../routes/cartRoutes.js';
+import cartItemsRoutes from '../routes/cart-routes.js';
 ///import { router as studentRoutes } from '../routes/student-routes.js';
 
 const app = express();
@@ -53,8 +53,8 @@ app.use(setUserForGet);
 // Define routes
 app.use('/', productRoutes);
 app.use('/', authRoutes);
-///app.use('/api/cart', cartItemsRoutes);
-///app.use('/api', studentRoutes); // Use the student routes here
+app.use('/api/cart', cartItemsRoutes);
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
