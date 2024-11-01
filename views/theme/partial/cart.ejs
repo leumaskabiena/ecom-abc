@@ -35,10 +35,20 @@
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 <!--===============================================================================================-->
 </head>
-<body >
-
+<body class="animsition">
 	
-    <div >
+	<div class="s-full js-hide-cart"></div>
+    <div class="header-cart flex-col-l p-l-65 p-r-25">
+        <div class="header-cart-title flex-w flex-sb-m p-b-8">
+            <span class="mtext-103 cl2">
+                Your Cart 
+            </span>
+
+            <div class="fs-35 lh-10 cl2 p-lr-5 pointer hov-cl1 trans-04 js-hide-cart">
+                <i class="zmdi zmdi-close"></i>
+            </div>
+        </div>
+        
         <div class="header-cart-content flex-w js-pscroll">
             <ul class="header-cart-wrapitem w-full">
                 <% if (cartItems.length > 0) { %>
@@ -49,49 +59,16 @@
                             </div>
         
                             <div class="header-cart-item-txt p-t-8">
-                                <form action="/cart/update" method="POST" class="update-cart-form">
-                                    <input type="hidden" name="productId" value="<%= item.productId %>">
-                                    
-                                    <a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
-                                        <%= item.category %> - <%= item.name %>
-                                    </a>
+                                <a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
+                                    <%= item.category %> - <%= item.name %>
+                                    <% if (item.color && item.color !== 'none') { %> - <%= item.color %><% } %>
+                                    <% if (item.size && item.size !== 'none') { %> - <%= item.size %><% } %>
+                                    <!-- Adjust to include item name or title if you have a mapping for product IDs -->
+                                </a>
         
-                                    <div class="header-cart-item-info m-b-8">
-                                        <!-- Editable quantity -->
-                                        <label for="quantity-<%= item.productId %>">Quantity:</label>
-                                        <input type="number" id="quantity-<%= item.productId %>" name="quantity" value="<%= item.quantity %>" min="1" class="input-quantity">
-        
-                                        <!-- Editable color, if available -->
-                                        <% if (item.availableColors && item.availableColors.length > 0) { %>
-                                            <label for="color-<%= item.productId %>">Color:</label>
-                                            <select id="color-<%= item.productId %>" name="color" class="input-color">
-                                                <% item.availableColors.forEach(color => { %>
-                                                    <option value="<%= color %>" <%= item.color === color ? 'selected' : '' %>><%= color %></option>
-                                                <% }) %>
-                                            </select>
-                                        <% } %>
-        
-                                        <!-- Editable size, if available -->
-                                        <% if (item.availableSizes && item.availableSizes.length > 0) { %>
-                                            <label for="size-<%= item.productId %>">Size:</label>
-                                            <select id="size-<%= item.productId %>" name="size" class="input-size">
-                                                <% item.availableSizes.forEach(size => { %>
-                                                    <option value="<%= size %>" <%= item.size === size ? 'selected' : '' %>><%= size %></option>
-                                                <% }) %>
-                                            </select>
-                                        <% } %>
-                                    </div>
-        
-                                    <div class="header-cart-item-total">
-                                        Price: R <%= (item.price * item.quantity).toFixed(2) %>
-                                    </div>
-        
-                                    <!-- Update and Remove buttons -->
-                                    <div class="header-cart-item-actions m-t-10">
-                                        <button type="submit" class="btn-update">Update</button>
-                                        <a href="/cart/remove/<%= item.productId %>" class="btn-remove">Remove</a>
-                                    </div>
-                                </form>
+                                <span class="header-cart-item-info">
+                                    <%= item.quantity %> x R <%= item.price %> <!-- Use toFixed for currency format -->
+                                </span>
                             </div>
                         </li>
                     <% }) %>
@@ -106,18 +83,17 @@
                 <% } %>
             </ul>
         
-            <!-- Cart Summary on the right side -->
             <div class="w-full">
                 <div class="header-cart-total w-full p-tb-40">
                     Total: R <%= total.toFixed(2) %> <!-- Display the total formatted to two decimal places -->
                 </div>
         
                 <div class="header-cart-buttons flex-w w-full">
-                    <a href="shoping-cart.html" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
+                    <a href="/shoping-cart" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
                         View Cart
                     </a>
         
-                    <a href="checkout.html" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
+                    <a href="shoping-cart.html" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
                         Check Out
                     </a>
                 </div>

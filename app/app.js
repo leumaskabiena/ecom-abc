@@ -53,7 +53,7 @@ app.use(setUserForGet);
 // Define routes
 app.use('/', productRoutes);
 app.use('/', authRoutes);
-app.use('/api/cart', cartItemsRoutes);
+app.use('/', cartItemsRoutes);
 
 
 app.listen(PORT, () => {

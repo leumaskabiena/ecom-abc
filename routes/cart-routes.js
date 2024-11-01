@@ -5,7 +5,9 @@ import {
     getCartContents,
     updateCartItem,
     removeCartItem,
-    clearCart
+    clearCart,
+    getCartModalsContents,
+    getShopingCart
 } from '../controllers/cartController.js';
 
 const router = express.Router();
@@ -22,8 +24,10 @@ const setUserForGet = (req, res, next) => {
 router.use(setUserForGet);
 
 // Routes
-router.post('/add', addToCart);
+router.post('/addCart', addToCart);
 router.get('/', getCartContents);
+router.get('/cart',getCartModalsContents);
+router.get('/shoping-cart',getShopingCart)
 router.put('/:itemId', updateCartItem);
 router.delete('/:itemId', removeCartItem);
 router.delete('/', clearCart);

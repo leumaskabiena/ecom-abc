@@ -194,13 +194,36 @@
 
     /*==================================================================
     [ Cart ]*/
-    $('.js-show-cart').on('click',function(){
-        $('.js-panel-cart').addClass('show-header-cart');
+     // Show cart when .js-show-cart is clicked
+     $('.js-show-cart').on('click', function() {
+        $.ajax({
+            url: '/cart', // Make sure this matches your Express route
+            method: 'GET',
+            success: function(data) {
+                // Inject the fetched HTML into the panel cart div
+                $('.js-panel-cart').html(data);
+                // Show the cart by adding the class
+                $('.js-panel-cart').addClass('show-header-cart');
+            },
+            error: function(xhr) {
+                console.error('Error loading cart:', xhr.responseText);
+            }
+        });
     });
-
-    $('.js-hide-cart').on('click',function(){
+    
+    // Hide cart on click
+    $('.js-hide-cart').on('click', function() {
         $('.js-panel-cart').removeClass('show-header-cart');
     });
+    
+    
+    // $('.js-show-cart').on('click',function(){
+    //     $('.js-panel-cart').addClass('show-header-cart');
+    // });
+
+    // $('.js-hide-cart').on('click',function(){
+    //     $('.js-panel-cart').removeClass('show-header-cart');
+    // });
 
     /*==================================================================
     [ Cart ]*/
@@ -217,79 +240,59 @@
     /*[ Cart Add to Cart Functionality ]*/
     $('.js-add-to-cart').on('click', function (e) {
         e.preventDefault();
-        console.log('Add to cart button clicked');
-
+    
         var $this = $(this);
+        
+        // Log the entire button element for inspection
+        console.log('Button element:', $this);
+    
+        // Log the HTML to see the rendered data attribute
+        console.log('Button HTML:', $this.prop('outerHTML'));
+    
+        // Capture the product ID
         var productId = $this.data('product-id');
         
-        // Debug log to check if product ID is being captured
-        console.log('Product ID from button:', productId);
-        
-        // Verify the data-product-id attribute exists
-        if (!productId) {
-            console.error('No product ID found on button. HTML:', $this.prop('outerHTML'));
-            alert('Error: Product ID not found');
-            return;
-        }
-
+        // Log the captured product ID
+        console.log('Captured product ID:', productId);
+    
         var $productContainer = $this.closest('.p-t-33');
-        
-        // Get form values with defaults and validation
         var quantity = parseInt($productContainer.find('input[name="num-product"]').val()) || 1;
         var size = $productContainer.find('select[name="size"]').val();
         var color = $productContainer.find('select[name="color"]').val();
-
-        // Debug logs
-        console.log('Retrieved values:', {
-            quantity: quantity,
-            size: size,
-            color: color
-        });
-
-        // Validate quantity
-        if (quantity < 1) {
-            console.error('Invalid quantity:', quantity);
-            alert('Please select a valid quantity');
-            return;
-        }
-
+    
         var cartData = {
-            productId: parseInt(productId), // Ensure productId is a number
+            productId: productId,  // Keep as a string
             quantity: quantity,
             size: size,
             color: color
         };
-
+    
         console.log('Sending cart data:', cartData);
-
+    
         $.ajax({
-            url: '/api/cart/add',
+            url: '/addCart',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(cartData),
             success: function (response) {
                 console.log('Success response:', response);
                 alert('Item added to cart!');
-                updateCartPreview();
             },
-            error: function (xhr, status, error) {
-                console.error('Error Details:', {
-                    status: status,
-                    error: error,
-                    responseText: xhr.responseText,
-                    statusCode: xhr.status
-                });
-                alert('Error adding item to cart. Please try again.');
+            error: function (xhr) {
+                console.error('Error:', xhr.responseText);
+                alert('Error adding item to cart.');
             }
         });
     });
+    
+    
 
     // Function to update cart preview
     function updateCartPreview() {
         console.log('Updating cart preview...'); // Log for debugging purposes
 
         $.ajax({
-            url: '/api/cart',
+            url: '/cart',
             method: 'GET',
             success: function (response) {
                 console.log('Cart details fetched successfully:', response); // Log the response

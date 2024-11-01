@@ -5,7 +5,8 @@ import {
     getCreateProductPage, 
     getCreateCategoryPage, 
     createCategory, 
-    getProductDetails 
+    getProductDetails ,
+    getAbout
 } from '../controllers/productController.js'; // Ensure this path is correct
 import { isAuthenticated } from '../controllers/auth.js'; // Adjust if necessary
 
@@ -27,7 +28,12 @@ router.get('/create-category', isAuthenticated,  getCreateCategoryPage);
 router.post('/create-category', isAuthenticated, createCategory);
 
 // Route to get product details by ID
-router.get('/details/:id', isAuthenticated, getProductDetails);
+router.get('/details/:id', getProductDetails);
+
+// route for about
+router.get ('/about', getAbout);
 
 // Exporting the router
 export default router;
+
+

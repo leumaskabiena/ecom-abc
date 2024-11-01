@@ -107,12 +107,14 @@ export const createProduct = async (req, res) => {
         });
     }
 
-    const { name, price, category, description, imageUrl } = req.body;
+    const { name, price, category, color, size, description, imageUrl } = req.body;
     try {
         await addDoc(collection(firestore, 'products'), {
             name,
             price,
             category,
+            color,
+            size,
             description,
             imageUrl,
             createdAt: new Date() // Add createdAt timestamp if needed
@@ -202,7 +204,23 @@ export const getProductDetails = async (req, res) => {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-            res.render('partial/product-details-modal', { product: { id: docSnap.id, ...docSnap.data() } });
+            let product = docSnap.data();
+
+            // Process sizes if available
+            if (product.size) {
+                product.sizes = product.size.split(',').map(size => size.trim());
+            }
+
+            // Process colors if available
+            if (product.color) {
+                product.colors = product.color.split(',').map(color => color.trim());
+            }
+
+            // Add the document ID to the product object
+            product.id = docSnap.id;
+            console.log('Server-side cartData received:', product);
+            // Render the product details modal with the updated product object
+            res.render('partial/product-details-modal', { product });
         } else {
             res.status(404).send('Product not found');
         }
@@ -211,3 +229,37 @@ export const getProductDetails = async (req, res) => {
         res.status(500).send('Error fetching product');
     }
 };
+
+
+// Get registration page
+export const getAbout = async (req, res) => {
+    try {
+        // Fetch products created within the last hour
+        const productsRef = collection(firestore, 'products');
+        const productsSnapshot = await getDocs(collection(firestore, 'products'));
+        const products = productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        // Fetch categories
+        const categoriesSnapshot = await getDocs(collection(firestore, 'categories'));
+        const categories = categoriesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        
+        // Fetch a random product (you can modify this query if necessary)
+        const randomProductQuery = query(productsRef, orderBy('createdAt'), limit(1));
+        const randomProductSnapshot = await getDocs(randomProductQuery);
+        const randomProduct = randomProductSnapshot.docs[0]?.data() || null;
+
+        res.render('layout', {
+            title: 'About',
+            currentPage: 'about',
+            products,
+            categories,
+            bodyPathProducts: 'partial/products.ejs',
+            bodyPathForm: 'partial/about.ejs',
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+
