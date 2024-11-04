@@ -59,6 +59,8 @@ export const addToCart = async (req, res) => {
         const cartQuery = query(cartRef, where(isGuest ? 'guestId' : 'userId', '==', isGuest ? cartId : userId));
         const cartSnapshot = await getDocs(cartQuery);
 
+        let totalItemsCount = 0; // Initialize total items count
+
         if (cartSnapshot.empty) {
             // If no cart exists, create a new cart entry
             await addDoc(cartRef, {
@@ -70,7 +72,9 @@ export const addToCart = async (req, res) => {
                     color,
                 }],
             });
-            return res.json({ message: 'Product added to cart', action: 'inserted' });
+            totalItemsCount = quantity; // Set count to the quantity added
+            req.session.cartCount = totalItemsCount; // Store count in session
+            return res.json({ message: 'Product added to cart', action: 'inserted', cartCount: totalItemsCount });
         } else {
             // Update existing cart item
             const cartItemDoc = cartSnapshot.docs[0];
@@ -90,13 +94,19 @@ export const addToCart = async (req, res) => {
             }
 
             await updateDoc(cartItemDoc.ref, { items: cartData.items });
-            return res.json({ message: 'Product updated in cart', action: 'updated' });
+
+            // Calculate total items count
+            totalItemsCount = cartData.items.reduce((total, item) => total + item.quantity, 0);
+            req.session.cartCount = totalItemsCount; // Store count in session
+
+            return res.json({ message: 'Product updated in cart', action: 'updated', cartCount: totalItemsCount });
         }
     } catch (error) {
         console.error('Add to cart error:', error.message);
         res.status(500).json({ error: 'Server error', details: error.message });
     }
 };
+
 
 
 

@@ -6,7 +6,10 @@ import {
     getCreateCategoryPage, 
     createCategory, 
     getProductDetails ,
-    getAbout
+    getAbout,
+    getEditProduct,
+    deleteProduct,
+    editProduct
 } from '../controllers/productController.js'; // Ensure this path is correct
 import { isAuthenticated } from '../controllers/auth.js'; // Adjust if necessary
 
@@ -30,6 +33,13 @@ router.post('/create-category', isAuthenticated, createCategory);
 // Route to get product details by ID
 router.get('/details/:id', getProductDetails);
 
+// Route to edit product details by ID
+router.get('/update-product/:id',isAuthenticated, getEditProduct);
+// Route to edit product details by ID
+router.post('/update-product/:id',isAuthenticated, editProduct);
+
+// Route to delete product details by ID
+router.delete('/delete-product/:id',isAuthenticated, deleteProduct);
 // route for about
 router.get ('/about', getAbout);
 

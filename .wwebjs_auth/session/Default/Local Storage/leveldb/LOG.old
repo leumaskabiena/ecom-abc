@@ -1,0 +1,6 @@
+2024/11/04-19:44:33.627 5bbd7 Reusing MANIFEST /mnt/c/Users/samuelkabiena/Learning/Nodejs/firebase-crud/.wwebjs_auth/session/Default/Local Storage/leveldb/MANIFEST-000001
+2024/11/04-19:44:33.671 5bbd7 Recovering log #4
+2024/11/04-19:44:33.681 5bbd7 Reusing old log /mnt/c/Users/samuelkabiena/Learning/Nodejs/firebase-crud/.wwebjs_auth/session/Default/Local Storage/leveldb/000004.log 
+2024/11/04-19:54:50.853 5bd65 Level-0 table #8: started
+2024/11/04-19:54:50.876 5bd65 Level-0 table #8: 14546 bytes OK
+2024/11/04-19:54:50.909 5bd65 Delete type=0 #4

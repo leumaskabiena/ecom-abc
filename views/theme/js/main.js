@@ -212,11 +212,13 @@
     });
     
     // Hide cart on click
-    $('.js-hide-cart').on('click', function() {
+  
+    
+    $(document).on('click', '.js-hide-cart', function() {
+        // Try removing the `show-header-cart` class directly on click
+        console.log("Closing cart...");
         $('.js-panel-cart').removeClass('show-header-cart');
-    });
-    
-    
+    })
     // $('.js-show-cart').on('click',function(){
     //     $('.js-panel-cart').addClass('show-header-cart');
     // });
@@ -267,7 +269,7 @@
             color: color
         };
     
-        console.log('Sending cart data:', cartData);
+     //   console.log('Sending cart data:', cartData);
     
         $.ajax({
             url: '/addCart',
@@ -276,7 +278,10 @@
             data: JSON.stringify(cartData),
             success: function (response) {
                 console.log('Success response:', response);
-                alert('Item added to cart!');
+               // alert('Item added to cart!');
+               // Close any open cart panel by removing the class directly
+               $('.js-hide-modal1').click();
+               $('.js-show-cart').click();
             },
             error: function (xhr) {
                 console.error('Error:', xhr.responseText);
@@ -413,6 +418,65 @@
         $('#productDetails').html('');
     });
 
+    $('.js-deleteproduct-b2').on('click', function(e){
+        e.preventDefault();
+    });
 
+
+
+    /*==================================================================
+    [ delete product  ]*/
+    $('.js-deleteproduct-b2').each(function () {
+        var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
+       // Get the URL from the href attribute
+       var productUrl = $(this).attr('href');
+    
+        $(this).on('click', function () {
+            // Confirm deletion with a popup
+            swal({
+                title: "Are you sure?",
+                text: "You are about to delete " + nameProduct,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    // AJAX call to delete the product
+                    $.ajax({
+                        url: productUrl,
+                        type: 'DELETE',
+                        success: function (response) {
+                            swal(nameProduct, "has been successfully deleted!", "success");
+    
+                            // Optionally remove the product from the DOM or update the UI
+                            $(this).closest('.product-item').remove(); // Adjust selector based on your HTML structure
+                        
+                            // Redirect to the home page
+                            window.location.href = '/';
+                        },
+                        error: function (xhr) {
+                            swal("Error", "There was an issue deleting the product.", "error");
+                            console.error('Error:', xhr.responseText);
+                        }
+                    });
+                }
+            });
+        });
+    });
+    
+
+    $('.js-addwish-detail').each(function(){
+        var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
+
+        $(this).on('click', function(){
+            swal(nameProduct, "sa is added to wishlist !", "success");
+
+            $(this).addClass('js-addedwish-detail');
+            $(this).off('click');
+        });
+    });
+
+ 
+    
 
 })(jQuery);

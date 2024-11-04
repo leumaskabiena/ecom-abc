@@ -1,6 +1,6 @@
 import { firestore } from '../config/db.js'; // Ensure this path is correct
 import { check, validationResult } from 'express-validator';
-import { collection, getDocs, addDoc, doc, getDoc, query, where, orderBy, limit  } from 'firebase/firestore';
+import { collection, getDocs, addDoc, doc, getDoc, query, where, orderBy, limit, deleteDoc, updateDoc  } from 'firebase/firestore';
 
 // Fetch all products and related data for the homepage
 export const getAllProducts = async (req, res) => {
@@ -90,8 +90,6 @@ export const getCreateProductPage = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
-
-
 
 // Create a new product
 export const createProduct = async (req, res) => {
@@ -227,6 +225,111 @@ export const getProductDetails = async (req, res) => {
     } catch (error) {
         console.error('Error fetching product:', error.message);
         res.status(500).send('Error fetching product');
+    }
+};
+
+// Fetch product details
+export const getEditProduct = async (req, res) => {
+    const productId = req.params.id;
+    try {
+        const docRef = doc(firestore, 'products', productId);
+        const docSnap = await getDoc(docRef);
+        // Fetch all categories
+        const allCategoriesRef = collection(firestore, 'categories');
+        const allCategoriesSnapshot = await getDocs(allCategoriesRef);
+        const categoriesAll = allCategoriesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        if (docSnap.exists()) {
+            let product = docSnap.data();
+
+            // Process sizes if available
+            if (product.size) {
+                product.sizes = product.size.split(',').map(size => size.trim());
+            }
+
+            // Process colors if available
+            if (product.color) {
+                product.colors = product.color.split(',').map(color => color.trim());
+            }
+
+            // Add the document ID to the product object
+            product.id = docSnap.id;
+            console.log('Server-side cartData received:', product);
+
+           
+
+
+            // Render the product details modal with the updated product object
+            res.render('partial/update-product', { 
+                product,
+                categoriesAll
+            });
+        } else {
+            res.status(404).send('Product not found');
+        }
+    } catch (error) {
+        console.error('Error fetching product:', error.message);
+        res.status(500).send('Error fetching product');
+    }
+};
+
+
+//Edit product based on ID
+export const editProduct = async (req, res) => {
+    const productId = req.params.id;
+    const { name, price, category, size, color, description, imageUrl  } = req.body; // Adjust fields as necessary
+    try {
+        const productRef = doc(firestore, 'products', productId);
+
+        // Check if the product exists before updating
+        const productSnap = await getDoc(productRef);
+        if (!productSnap.exists()) {
+            return res.status(404).send('Product not found');
+        }
+
+        // Prepare the updated product data
+        const updatedData = {
+            ...(name && { name }),
+            ...(price && { price }),
+            ...(category && { category }),
+            ...(size && { size }), // Convert array to comma-separated string if size is provided
+            ...(color && { color }), // Convert array to comma-separated string if color is provided
+            ...(description && { description }),
+            ...(imageUrl && { imageUrl }),
+        };
+
+        console.log('Server-side cartData to be updated :', updatedData);
+
+        // Update the product document in Firestore
+        await updateDoc(productRef, updatedData);
+
+        // Redirect to the home page after a successful update
+        res.redirect('/');
+    } catch (error) {
+        console.error('Error updating product:', error.message);
+        res.status(500).send('Error updating product');
+    }
+};
+
+//Delete Product based on ID
+export const deleteProduct = async (req, res) => {
+    const productId = req.params.id;
+    try {
+        const productRef = doc(firestore, 'products', productId);
+
+        // Check if the product exists before deleting
+        const productSnap = await getDoc(productRef);
+        if (!productSnap.exists()) {
+            return res.status(404).send('Product not found');
+        }
+
+        // Delete the product document in Firestore
+        await deleteDoc(productRef);
+
+        res.status(200).send('Product deleted successfully');
+    } catch (error) {
+        console.error('Error deleting product:', error.message);
+        res.status(500).send('Error deleting product');
     }
 };
 

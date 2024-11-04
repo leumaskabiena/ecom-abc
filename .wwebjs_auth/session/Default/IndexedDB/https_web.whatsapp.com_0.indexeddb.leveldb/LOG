@@ -1,0 +1,12 @@
+2024/11/04-22:03:06.554 215a Reusing MANIFEST /mnt/c/Users/samuelkabiena/Learning/Nodejs/firebase-crud/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/11/04-22:03:06.584 215a Recovering log #101
+2024/11/04-22:03:06.653 215a Reusing old log /mnt/c/Users/samuelkabiena/Learning/Nodejs/firebase-crud/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000101.log 
+2024/11/04-22:03:14.345 2208 Level-0 table #107: started
+2024/11/04-22:03:14.651 2208 Level-0 table #107: 256019 bytes OK
+2024/11/04-22:03:14.710 2208 Delete type=0 #101
+2024/11/04-22:03:14.719 2208 Manual compaction at level-0 from '\x00(\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00)\x00\x00\x00' @ 0 : 0; will stop at (end)
+2024/11/04-22:03:17.116 2207 Compacting 1@1 + 2@2 files
+2024/11/04-22:03:21.567 2207 Generated table #108@1: 35026 keys, 2190803 bytes
+2024/11/04-22:03:28.395 2207 Generated table #109@1: 50613 keys, 1826544 bytes
+2024/11/04-22:03:28.395 2207 Compacted 1@1 + 2@2 files => 4017347 bytes
+2024/11/04-22:03:28.406 2207 compacted to: files[ 0 0 2 0 0 0 0 ]

@@ -10,6 +10,8 @@ import {
     getShopingCart
 } from '../controllers/cartController.js';
 
+
+
 const router = express.Router();
 
 // Middleware to set user variable for GET requests only
@@ -31,5 +33,6 @@ router.get('/shoping-cart',getShopingCart)
 router.put('/:itemId', updateCartItem);
 router.delete('/:itemId', removeCartItem);
 router.delete('/', clearCart);
+
 
 export default router;

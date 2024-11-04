@@ -9,6 +9,7 @@ import config from '../config/config.js'; // Ensure this is the correct path and
 import productRoutes from '../routes/product-routes.js';
 import authRoutes from '../routes/auth-routes.js';
 import cartItemsRoutes from '../routes/cart-routes.js';
+import orderRoutes from '../routes/order-routes.js';
 ///import { router as studentRoutes } from '../routes/student-routes.js';
 
 const app = express();
@@ -54,6 +55,7 @@ app.use(setUserForGet);
 app.use('/', productRoutes);
 app.use('/', authRoutes);
 app.use('/', cartItemsRoutes);
+app.use('/', orderRoutes);
 
 
 app.listen(PORT, () => {
